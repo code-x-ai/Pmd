@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M.Sc. IT Practical Manual</title>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --secondary: #f8f9fa;
+            --border: #dee2e6;
+            --text: #212529;
+            --code-bg: #282c34;
+            --code-text: #abb2bf;
+            --accent: #e83e8c;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --success: #28a745;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            color: var(--text);
+            background-color: #ffffff;
+        }
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 300px;
+            background-color: var(--primary);
+            color: white;
+            overflow-y: auto;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+        .sidebar h2 {
+            text-align: center;
+            padding: 0 15px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            font-size: 1.3rem;
+            margin-top: 0;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar li {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: background 0.2s;
+            font-weight: 500;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        .sidebar li:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        .sidebar li.active {
+            background-color: rgba(255,255,255,0.25);
+            border-left: 5px solid #fff;
+        }
+        /* Main Content Area */
+        .content {
+            flex: 1;
+            padding: 40px 60px;
+            overflow-y: auto;
+            background-color: #ffffff;
+            scroll-behavior: smooth;
+        }
+        .practical-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .practical-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 { 
+            color: var(--primary); 
+            border-bottom: 3px solid var(--primary); 
+            padding-bottom: 15px; 
+            margin-top: 0;
+            font-size: 2rem;
+        }
+        h2 { 
+            color: #343a40; 
+            margin-top: 40px; 
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+        h3 { 
+            color: #495057; 
+            margin-top: 30px;
+        }
+        p { 
+            line-height: 1.7; 
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+        ul, ol { 
+            line-height: 1.7; 
+            margin-bottom: 20px;
+            padding-left: 25px;
+            font-size: 1.05rem;
+        }
+        li { margin-bottom: 12px; }
+        
+        /* Code Block Styles */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            position: relative;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            margin: 15px 0 25px 0;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+            border: 1px solid #1e1e1e;
+        }
+        code {
+            font-family: inherit;
+            white-space: pre;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #61dafb;
+            color: #282c34;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .copy-btn:hover {
+            background-color: #4fa8c9;
+            transform: translateY(-1px);
+        }
+        .copy-btn:active {
+            background-color: #3e8eab;
+            transform: translateY(0);
+        }
+        /* Utility Classes */
+        .note {
+            background-color: #fff3cd;
+            border-left: 5px solid var(--warning);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .note-danger {
+            background-color: #f8d7da;
+            border-left: 5px solid var(--danger);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .troubleshooting {
+            background-color: #f1f8ff;
+            border-left: 5px solid var(--primary);
+            padding: 15px 20px;
+            margin: 30px 0;
+            border-radius: 4px;
+        }
+        .troubleshooting h4 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .troubleshooting h4::before {
+            content: "🛠️";
+        }
+        .troubleshooting p {
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        .troubleshooting ul {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+        strong { color: #000; }
+        code {
+            background-color: #f1f3f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #d63384;
+            font-size: 0.9em;
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+            font-size: inherit;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <h2>M.Sc. IT Practicals</h2>
+        <ul>
+            <li class="active" onclick="showPractical(1)">1. Creating MVC Project using ASP.NET Core</li>
+            <li onclick="showPractical(2)">2. Develop a Microservice with RESTful API</li>
+            <li onclick="showPractical(3)">3. Working with CircleCI for CI</li>
+            <li onclick="showPractical(4)">4. Deploy an application using Ocelot API</li>
+            <li onclick="showPractical(5)">5. Usage of Docker</li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="content">
+
+        <!-- Practical 1 -->
+        <section id="prac1" class="practical-section active">
+            <h1>Practical 1: Creating MVC Project using ASP.NET Core</h1>
+            
+            <h2>Aim:</h2>
+            <p>To create a Model-View-Controller (MVC) web application using ASP.NET Core and understand its architecture.</p>
+
+            <h2>Theory:</h2>
+            <p>ASP.NET Core MVC is a framework for building web applications using the Model-View-Controller architectural pattern. This pattern separates an application into three main components: the <strong>Model</strong> (data and business logic), the <strong>View</strong> (UI logic), and the <strong>Controller</strong> (handling user input). This separation helps manage complexity and makes the application easier to test and maintain.</p>
+
+            <h2>Working Steps:</h2>
+            <ol>
+                <li><strong>Create Project via CLI:</strong> Open Command Prompt. Navigate to your desired folder. Create a directory and the MVC project:
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>md practMVC
+cd practMVC
+dotnet new mvc --auth None
+dotnet build
+dotnet run</code></pre>
+                    <em>Why?</em> Using the CLI ensures all necessary packages and default files (Controllers, Views, wwwroot) are scaffolded correctly.
+                    Copy the listening URL (e.g., <code>http://localhost:5083</code>) and paste it into Chrome to verify it runs.
+                </li>
+                <li><strong>Open in Visual Studio:</strong> Go to the <code>practMVC</code> folder, right-click the <code>.csproj</code> file -> <strong>Open with</strong> -> <strong>Visual Studio 2022</strong>. Press the green Play button.</li>
+                <li><strong>Add a Model:</strong> Right-click <strong>Models</strong> folder -> <strong>Add</strong> -> <strong>Class</strong> -> Name it <code>StockQuote.cs</code>.
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>namespace practMVC.Models
+{
+    public class StockQuote
+    {
+        public string? Symbol { get; set; }
+        public int Price { get; set; }
+    }
+}</code></pre>
+                </li>
+                <li><strong>Update Controller:</strong> Open <code>Controllers/HomeController.cs</code>. Modify the <code>Index()</code> method. <em>Why?</em> The controller is responsible for passing data to the view.
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>public IActionResult Index()
+{
+    var model = new StockQuote { Symbol = "Nike", Price = 3200 };
+    return View(model);
+}</code></pre>
+                </li>
+                <li><strong>Update View:</strong> Open <code>Views/Home/Index.cshtml</code>. Replace content with. <em>Why?</em> The View uses the `@model` directive to strongly type the data it receives and renders it using Razor syntax.
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>@model practMVC.Models.StockQuote
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+&lt;div class="text-center"&gt;
+    &lt;h1 class="display-4"&gt;Welcome&lt;/h1&gt;
+    &lt;h2&gt;Stock Information&lt;/h2&gt;
+    &lt;p&gt;Symbol: @Model.Symbol&lt;/p&gt;
+    &lt;p&gt;Price: @Model.Price&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+                </li>
+                <li><strong>Run the Project:</strong> Press the green Play button in Visual Studio or run <code>dotnet run</code> in the terminal. Open the localhost URL in your browser.</li>
+            </ol>
+
+            <div class="troubleshooting">
+                <h4>Common Problems & Solutions</h4>
+                <p><strong>Problem 1: "The localhost page isn't working" or Port Conflict.</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> Another application is using the same port. Open <code>Properties/launchSettings.json</code> in your project and change the port number (e.g., from <code>5083</code> to <code>5084</code>).</li>
+                </ul>
+                <p><strong>Problem 2: "dotnet run" command not recognized.</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> Ensure the .NET SDK is installed and added to your system PATH. Restart your command prompt.</li>
+                </ul>
+            </div>
+
+            <h2>Output:</h2>
+            <p>The browser displays the MVC web page with "Symbol: Nike" and "Price: 3200", demonstrating data flow from Controller to View.</p>
+        </section>
+
+        <!-- Practical 2 -->
+        <section id="prac2" class="practical-section">
+            <h1>Practical 2: Develop a Microservice using ASP.NET Core with a RESTful API</h1>
+            
+            <h2>Aim:</h2>
+            <p>To develop a microservice using ASP.NET Core Web API with a RESTful API to expose and manage application data using Entity Framework Core and SQL Server.</p>
+
+            <h2>Theory:</h2>
+            <p>Microservices architecture structures an application as a collection of loosely coupled, independently deployable services. A RESTful API uses standard HTTP methods (GET, POST, PUT, DELETE) to manage data. In this practical, we create an independent "USER" microservice with its own internal database.</p>
+
+            <h2>Working Steps:</h2>
+            <ol>
+                <li><strong>Create Project:</strong> Create a new <strong>ASP.NET Core Web API</strong> project named <code>USER</code>. Set Framework to .NET 6.0, Auth to None. Delete default <code>WeatherForecast.cs</code> and <code>WeatherForecastController.cs</code> to keep the project clean.</li>
+                <li><strong>Add API Controller:</strong> Right-click Controllers -> Add -> Controller -> <strong>API Controller with read/write actions</strong>. Name it <code>UserController.cs</code>. This scaffolds basic CRUD endpoints.</li>
+                <li><strong>Create Entities:</strong> Create folders <code>Database/Entities</code>. Add a class <code>User.cs</code>:
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>namespace USER.Database.Entities
+{
+    public class User
+    {
+        public int UserId { get; set; }
+        public string? Name { get; set; }
+        public string? Address { get; set; }
+        public int Contact { get; set; }
+    }
+}</code></pre>
+                </li>
+                <li><strong>Install NuGet Packages:</strong> Right-click Dependencies -> Manage NuGet Packages. Install:
+                    <ul>
+                        <li><code>Microsoft.EntityFrameworkCore</code></li>
+                        <li><code>Microsoft.EntityFrameworkCore.Tools</code> (Needed for migrations)</li>
+                        <li><code>Microsoft.EntityFrameworkCore.SqlServer</code> (Provider for SQL Server)</li>
+                    </ul>
+                </li>
+                <li><strong>Create Database Context:</strong> Add class <code>DatabaseContext.cs</code> in the <code>Database</code> folder. This acts as a bridge between your code and the database.
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>using Microsoft.EntityFrameworkCore;
+using USER.Database.Entities;
+
+namespace USER.Database
+{
+    public class DatabaseContext : DbContext
+    {
+        public DbSet&lt;User&gt; Users { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Database;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        }
+    }
+}</code></pre>
+                </li>
+                <li><strong>Create Table:</strong> Go to View -> SQL Server Object Explorer. Right-click Databases -> Add New Database (Name: <code>Database</code>). Expand it, right-click Tables -> Add New Table. Add columns: <code>UserId</code> (PK, int), <code>Name</code> (nvarchar), <code>Address</code> (nvarchar), <code>Contact</code> (int). Update Database.</li>
+                <li><strong>Run Migrations:</strong> Go to Tools -> NuGet Package Manager -> Package Manager Console. This creates the database schema based on your C# classes.
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>add-migration initial
+update-database -verbose</code></pre>
+                </li>
+                <li><strong>Implement RESTful API Methods:</strong> Open <code>UserController.cs</code> and replace with full CRUD logic:
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>using Microsoft.AspNetCore.Mvc;
+using USER.Database;
+using USER.Database.Entities;
+
+namespace USER.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UserController : ControllerBase
+    {
+        private readonly DatabaseContext _context = new DatabaseContext();
+
+        // GET: api/User
+        [HttpGet]
+        public IActionResult Get() { return Ok(_context.Users.ToList()); }
+
+        // GET: api/User/5
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            var user = _context.Users.Find(id);
+            if (user == null) return NotFound();
+            return Ok(user);
+        }
+
+        // POST: api/User
+        [HttpPost]
+        public IActionResult Post([FromBody] User model)
+        {
+            try
+            {
+                _context.Users.Add(model);
+                _context.SaveChanges();
+                return StatusCode(StatusCodes.Status201Created, model);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        // PUT: api/User/5
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] User model)
+        {
+            var entity = _context.Users.FirstOrDefault(e =&gt; e.UserId == id);
+            if (entity == null) return BadRequest("User not found.");
+            
+            entity.Name = model.Name;
+            entity.Address = model.Address;
+            entity.Contact = model.Contact;
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        // DELETE: api/User/5
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var entity = _context.Users.FirstOrDefault(e =&gt; e.UserId == id);
+            if (entity == null) return NotFound();
+            
+            _context.Users.Remove(entity);
+            _context.SaveChanges();
+            return NoContent();
+        }
+    }
+}</code></pre>
+                </li>
+                <li><strong>Run and Test:</strong> Press F5 to run. The browser opens Swagger UI. Test the GET, POST, PUT, DELETE endpoints. You can also use Postman with the URL <code>https://localhost:7286/api/User</code>.</li>
+            </ol>
+
+            <div class="troubleshooting">
+                <h4>Common Problems & Solutions</h4>
+                <p><strong>Problem 1: "No DbContext was found in assembly" error during migration.</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> Ensure your <code>DatabaseContext.cs</code> file is in the correct namespace and inherits from <code>DbContext</code>. Also, make sure you have the <code>Microsoft.EntityFrameworkCore.Tools</code> package installed.</li>
+                </ul>
+                <p><strong>Problem 2: "Cannot connect to SQL Server" or "Login failed" error.</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> Check your connection string in <code>DatabaseContext.cs</code>. Ensure the <code>Data Source</code> matches your local SQL Server instance (e.g., <code>(localdb)\MSSQLLocalDB</code> or <code>.\SQLEXPRESS</code>).</li>
+                </ul>
+                <p><strong>Problem 3: Database already exists error.</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> In SQL Server Object Explorer, delete the existing <code>Database</code> manually, then run <code>update-database</code> again.</li>
+                </ul>
+            </div>
+
+            <h2>Output:</h2>
+            <p>The application runs as an independent microservice. Swagger and Postman successfully perform CRUD operations on the User data, returning JSON responses.</p>
+        </section>
+
+        <!-- Practical 3 -->
+        <section id="prac3" class="practical-section">
+            <h1>Practical 3: Working with CircleCI for continuous integration</h1>
+            
+            <h2>Aim:</h2>
+            <p>To implement Continuous Integration (CI) using CircleCI for a Python application.</p>
+
+            <h2>Theory:</h2>
+            <p>Continuous integration is a software development strategy that increases the speed of development while ensuring the quality of the code. Developers continually commit changes in small increments, and each change is automatically built and tested by the CI server before it is merged into the product.</p>
+
+            <h2>Working Steps:</h2>
+            <ol>
+                <li><strong>Prerequisites:</strong> Download and install <strong>GitHub Desktop</strong>, <strong>Git for Windows</strong> (Git Bash), and <strong>VS Code</strong>. Install the Python extension in VS Code.</li>
+                <li><strong>Create Project Folder:</strong> Create a folder named <code>CIRCLECI</code>. Open it in VS Code.</li>
+                <li><strong>Create Python Files:</strong> Inside the folder, create <code>main.py</code>:
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>def to_upper(name):
+    return name.upper()
+
+def say_hello(name):
+    print(f'Hello, {name}')
+
+if __name__ == '__main__':
+    name='TrainwithTannu'
+    say_hello(name)
+    up = to_upper(name)
+    print(up)</code></pre>
+                    Create <code>test.py</code>:
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>import unittest
+from main import to_upper
+
+class MyTestCase(unittest.TestCase):
+    def test_to_upper(self):
+        name="Tannu"
+        upper_name=to_upper(name)
+        self.assertEqual(upper_name, "TANNU")
+
+if __name__ == '__main__':
+    unittest.main()</code></pre>
+                </li>
+                <li><strong>Create README:</strong> Create <code>readme.md</code> and add basic instructions (e.g., "How to run the code").</li>
+                <li><strong>Push to GitHub:</strong> Open GitHub Desktop. Sign in. Create a new repository on GitHub named <code>CircleCI-Python3</code>. Clone it locally. Copy your files into the cloned repo. Open Git Bash, navigate to the repo, and run:
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>git add .
+git commit -m "added python file by tannu"
+git push origin main</code></pre>
+                </li>
+                <li><strong>Setup CircleCI:</strong> Go to circleci.com and log in with GitHub. Set up the project by selecting your repository.</li>
+                <li><strong>Create CircleCI Config:</strong> In your project root, create a folder <code>.circleci</code> and inside it create <code>config.yml</code>. <em>Why?</em> This file tells CircleCI exactly how to build and test your code.
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - checkout
+      - run: python main.py
+  test:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - checkout
+      - run: python test.py
+
+workflows:
+  build_and_test_deploy:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build</code></pre>
+                </li>
+                <li><strong>Push and Verify:</strong> Commit and push the <code>.circleci/config.yml</code> file using Git commands. Go to the CircleCI dashboard. You will see the "build" and "test" jobs running. Click on them to see the successful execution of your Python files.</li>
+            </ol>
+
+            <div class="troubleshooting">
+                <h4>Common Problems & Solutions</h4>
+                <p><strong>Problem 1: "Config file not found" or "Syntax Error" in CircleCI.</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> Ensure the folder is named exactly <code>.circleci</code> (with the dot) and the file is <code>config.yml</code>. YAML is very strict about indentation; ensure you use spaces (not tabs) and the structure matches exactly.</li>
+                </ul>
+                <p><strong>Problem 2: "Permission denied" when running python scripts.</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> Ensure the files are committed and pushed to GitHub correctly. Check if the repo is public or if CircleCI has been granted access to private repos.</li>
+                </ul>
+            </div>
+
+            <h2>Output:</h2>
+            <p>CircleCI dashboard shows a successful pipeline with both "build" and "test" jobs passing. The logs confirm that <code>main.py</code> and <code>test.py</code> executed correctly.</p>
+        </section>
+
+        <!-- Practical 4 -->
+        <section id="prac4" class="practical-section">
+            <h1>Practical 4: Deploy an application using Ocelot API</h1>
+            
+            <h2>Aim:</h2>
+            <p>To deploy an ASP.NET Core MVC application behind an Ocelot API Gateway and demonstrate request routing.</p>
+
+            <h2>Theory:</h2>
+            <p>Ocelot is an open-source, lightweight, and scalable .NET Core-based API Gateway. It provides a single, unified entry point for clients to access multiple downstream services. In this practical, an ASP.NET Core MVC application acts as the downstream microservice, and the Ocelot project acts as the gateway forwarding client requests to the MVC application.</p>
+
+            <h2>Working Steps:</h2>
+            <ol>
+                <li><strong>Create MVC App:</strong> Create an ASP.NET Core Web App (MVC) named <code>pracMVC</code>. Add a model <code>StockQuote.cs</code>:
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>namespace pracMVC.Models
+{
+    public class StockQuote
+    {
+        public string? Symbol { get; set; }
+        public int Price { get; set; }
+    }
+}</code></pre>
+                </li>
+                <li><strong>Update Controller:</strong> In <code>HomeController.cs</code>:
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>public IActionResult Index()
+{
+    var model = new StockQuote { Symbol = "Nike", Price = 3200 };
+    return View(model);
+}</code></pre>
+                </li>
+                <li><strong>Update View:</strong> In <code>Views/Home/Index.cshtml</code>:
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>@model pracMVC.Models.StockQuote
+@{
+    ViewData["Title"] = "Home Page";
+}
+&lt;div class="text-center"&gt;
+    &lt;h1 class="display-4"&gt;Welcome to MVC App&lt;/h1&gt;
+    &lt;h2&gt;Stock Quote&lt;/h2&gt;
+    &lt;p&gt;Symbol: @Model.Symbol&lt;/p&gt;
+    &lt;p&gt;Price: @Model.Price&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+                </li>
+                <li><strong class="note-danger">CRUCIAL FIX:</strong> Open <code>pracMVC/Program.cs</code>. Comment out <code>app.UseHttpsRedirection();</code>. <em>Why?</em> Ocelot communicates via HTTP internally. If the MVC app forces HTTPS redirection, the gateway will get a 307 redirect and fail to fetch the page.
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>// app.UseHttpsRedirection();</code></pre>
+                </li>
+                <li><strong>Set MVC Port:</strong> Open <code>pracMVC/Properties/launchSettings.json</code>. Ensure the HTTP profile uses port <code>5083</code>.
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>"applicationUrl": "http://localhost:5083"</code></pre>
+                </li>
+                <li><strong>Create Ocelot Project:</strong> Right-click Solution -> Add -> New Project -> <strong>ASP.NET Core Empty</strong>. Name it <code>ocelotAPI</code>. Install the <code>Ocelot</code> NuGet package.</li>
+                <li><strong>Configure Ocelot JSON:</strong> Add a new item <code>ocelot.json</code> to the <code>ocelotAPI</code> project. This file defines the routing rules.
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/Home/Index",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5083
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/home",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5252"
+  }
+}</code></pre>
+                    <div class="note">Important: Right-click <code>ocelot.json</code> -> Properties -> Set "Copy to Output Directory" to "Copy if newer". Visual Studio does not do this by default, and Ocelot will crash if it can't find this file at runtime.</div>
+                </li>
+                <li><strong>Configure Ocelot Program.cs:</strong>
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Load the ocelot.json file
+builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+
+// Add Ocelot services
+builder.Services.AddOcelot();
+
+var app = builder.Build();
+
+// Use Ocelot middleware
+await app.UseOcelot();
+
+app.Run();</code></pre>
+                </li>
+                <li><strong>Set Gateway Port:</strong> Open <code>ocelotAPI/Properties/launchSettings.json</code>. Ensure the HTTP profile uses port <code>5252</code> and sets the launch URL to the gateway path.
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>"applicationUrl": "http://localhost:5252",
+"launchUrl": "gateway/home"</code></pre>
+                </li>
+                <li><strong>Multiple Startup Projects:</strong> Right-click Solution -> Configure Startup Projects -> Select <strong>Multiple startup projects</strong> -> Set both <code>pracMVC</code> and <code>ocelotAPI</code> to <strong>Start</strong>.</li>
+                <li><strong>Run:</strong> Press F5. Both terminals will open. Wait for them to say "Now listening on...". Navigate to <code>http://localhost:5252/gateway/home</code>.</li>
+            </ol>
+
+            <div class="troubleshooting">
+                <h4>Common Problems & Solutions (Practical 4 Focus)</h4>
+                <p><strong>Problem 1: "502 Bad Gateway" or "Connection Refused".</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> Ocelot cannot reach your MVC app. 
+                        <br>1. Check if <code>pracMVC</code> is actually running. Look at its terminal window.
+                        <br>2. Check the port number in <code>ocelot.json</code> (<code>"Port": 5083</code>). It MUST match the port in <code>pracMVC/Properties/launchSettings.json</code>.
+                    </li>
+                </ul>
+                <p><strong>Problem 2: Ocelot starts but crashes immediately with "ocelot.json not found".</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> You forgot to set the file properties. Right-click <code>ocelot.json</code> in Solution Explorer -> Properties -> Set <strong>Copy to Output Directory</strong> to <strong>Copy if newer</strong> or <strong>Copy always</strong>.</li>
+                </ul>
+                <p><strong>Problem 3: "307 Temporary Redirect" or "HTTPS error".</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> Open <code>pracMVC/Program.cs</code> and ensure <code>app.UseHttpsRedirection();</code> is commented out. Ocelot works over HTTP internally.</li>
+                </ul>
+                <p><strong>Problem 4: Visual Studio only opens one project (either MVC or Ocelot) instead of both.</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> You need to set up Multiple Startup Projects. Right-click the Solution (the very top item in Solution Explorer) -> <strong>Configure Startup Projects...</strong> -> Select <strong>Multiple startup projects</strong> -> Change the Action for both <code>pracMVC</code> and <code>ocelotAPI</code> to <strong>Start</strong>.</li>
+                </ul>
+                <p><strong>Problem 5: 404 Not Found on Gateway URL.</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> Check your exact URL. The browser must match the <code>UpstreamPathTemplate</code> in <code>ocelot.json</code> exactly. If the file says <code>/gateway/home</code>, you must type <code>http://localhost:5252/gateway/home</code>.</li>
+                </ul>
+            </div>
+
+            <h2>Output:</h2>
+            <p>The browser at <code>http://localhost:5252/gateway/home</code> displays the MVC page ("Symbol: Nike", "Price: 3200") showing that Ocelot successfully routed the request to the downstream MVC app on port 5083.</p>
+        </section>
+
+        <!-- Practical 5 -->
+        <section id="prac5" class="practical-section">
+            <h1>Practical 5: Usage of Docker</h1>
+            
+            <h2>Aim:</h2>
+            <p>To build and run a Docker image as a container and share the image using Docker Hub.</p>
+
+            <h2>Theory:</h2>
+            <p>Docker packages software into standardized units called containers that have everything the software needs to run including libraries, system tools, code, and runtime. Docker Hub is a registry service provided by Docker for finding and sharing container images.</p>
+
+            <h2>Working Steps:</h2>
+            <ol>
+                <li><strong>Create Project:</strong> Create a new <strong>ASP.NET Core Web API</strong> project named <code>DockerPractical</code>. Select .NET 6.0 and check <strong>Enable Docker</strong>.</li>
+                <li><strong>Install Docker Desktop:</strong> If prompted, install Docker Desktop for Windows. Enable <strong>Windows Hypervisor Platform</strong> and <strong>Windows Subsystem for Linux</strong> in Windows Features. Run <code>wsl --update</code> in an admin terminal if needed.</li>
+                <li><strong>Run and Verify:</strong> Select the <strong>Docker</strong> profile in Visual Studio and click Play. Open Docker Desktop -> Containers. You will see <code>DockerPractical</code> running.</li>
+                <li><strong>Verify Image:</strong> Open Command Prompt. Run:
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>docker images</code></pre>
+                </li>
+                <li><strong>Login to Docker Hub:</strong>
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>docker login</code></pre>
+                    (Enter your Docker Hub username and password).
+                </li>
+                <li><strong>Tag the Image:</strong> Replace <code>yourusername</code> with your actual Docker Hub username:
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>docker tag dockerpractical:dev yourusername/dockerpractical</code></pre>
+                </li>
+                <li><strong>Push to Docker Hub:</strong>
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>docker push yourusername/dockerpractical</code></pre>
+                </li>
+                <li><strong>Verify on Docker Hub:</strong> Go to hub.docker.com -> Repositories. You will see your <code>dockerpractical</code> repository with the image.</li>
+                <li><strong>Pull Image (Simulating Sharing):</strong> Delete the local image to prove you can download it again:
+                    <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><code>docker rmi yourusername/dockerpractical:latest
+docker pull yourusername/dockerpractical:latest</code></pre>
+                </li>
+            </ol>
+
+            <div class="troubleshooting">
+                <h4>Common Problems & Solutions</h4>
+                <p><strong>Problem 1: "Docker command failed with exit code 1" / "pipe/dockerDesktopLinuxEngine" not found.</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> Docker Desktop is not running. Open Docker Desktop from your start menu and wait for the whale icon to stop animating.</li>
+                </ul>
+                <p><strong>Problem 2: "The current user is not in the 'docker-users' group".</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> Open Command Prompt as Administrator and run: <code>net localgroup docker-users "your-username" /add</code>. Then sign out and sign back in to Windows.</li>
+                </ul>
+                <p><strong>Problem 3: "Port is already allocated" when running the container.</strong></p>
+                <ul>
+                    <li><strong>Solution:</strong> Another process is using the port. Change the port mapping in the <code>docker run</code> command (e.g., <code>-p 5001:5000</code>) or stop the conflicting application.</li>
+                </ul>
+            </div>
+
+            <h2>Output:</h2>
+            <p>The application successfully builds and runs in a Docker container. The image is tagged, pushed to Docker Hub, and can be pulled back down from the repository, demonstrating successful image sharing.</p>
+        </section>
+
+    </main>
+
+    <script>
+        // Function to switch between practicals
+        function showPractical(num) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.practical-section');
+            sections.forEach(sec => sec.classList.remove('active'));
+
+            // Remove active class from all sidebar items
+            const navItems = document.querySelectorAll('.sidebar li');
+            navItems.forEach(item => item.classList.remove('active'));
+
+            // Show selected section
+            document.getElementById('prac' + num).classList.add('active');
+
+            // Add active class to clicked sidebar item
+            navItems[num - 1].classList.add('active');
+
+            // Scroll to top of content
+            document.querySelector('.content').scrollTop = 0;
+        }
+
+        // Function to copy code to clipboard
+        function copyCode(btn) {
+            const pre = btn.parentElement;
+            const code = pre.querySelector('code').innerText;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = 'Copied!';
+                btn.style.backgroundColor = '#28a745';
+                btn.style.color = '#fff';
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.backgroundColor = '#61dafb';
+                    btn.style.color = '#282c34';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = code;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                btn.innerText = 'Copied!';
+                setTimeout(() => { btn.innerText = 'Copy'; }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
